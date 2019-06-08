@@ -31,6 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tpRotas = new System.Windows.Forms.TabPage();
+            this.btnCarregarCidades = new System.Windows.Forms.Button();
             this.btnBuscar = new System.Windows.Forms.Button();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -54,7 +55,8 @@
             this.lsbOrigem = new System.Windows.Forms.ListBox();
             this.pbMapa = new System.Windows.Forms.PictureBox();
             this.tpArvore = new System.Windows.Forms.TabPage();
-            this.btnCarregarCidades = new System.Windows.Forms.Button();
+            this.dlgAbrir = new System.Windows.Forms.OpenFileDialog();
+            this.btnCarregarCaminhos = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tpRotas.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
@@ -77,6 +79,7 @@
             // 
             // tpRotas
             // 
+            this.tpRotas.Controls.Add(this.btnCarregarCaminhos);
             this.tpRotas.Controls.Add(this.btnCarregarCidades);
             this.tpRotas.Controls.Add(this.btnBuscar);
             this.tpRotas.Controls.Add(this.dataGridView2);
@@ -95,6 +98,16 @@
             this.tpRotas.TabIndex = 0;
             this.tpRotas.Text = "Rotas entre cidades";
             this.tpRotas.UseVisualStyleBackColor = true;
+            // 
+            // btnCarregarCidades
+            // 
+            this.btnCarregarCidades.Location = new System.Drawing.Point(920, 66);
+            this.btnCarregarCidades.Name = "btnCarregarCidades";
+            this.btnCarregarCidades.Size = new System.Drawing.Size(89, 43);
+            this.btnCarregarCidades.TabIndex = 12;
+            this.btnCarregarCidades.Text = "Carregar cidades";
+            this.btnCarregarCidades.UseVisualStyleBackColor = true;
+            this.btnCarregarCidades.Click += new System.EventHandler(this.btnCarregarCidades_Click);
             // 
             // btnBuscar
             // 
@@ -330,15 +343,18 @@
             this.tpArvore.Text = "Árvore de Cidades";
             this.tpArvore.UseVisualStyleBackColor = true;
             // 
-            // btnCarregarCidades
+            // dlgAbrir
             // 
-            this.btnCarregarCidades.Location = new System.Drawing.Point(920, 57);
-            this.btnCarregarCidades.Name = "btnCarregarCidades";
-            this.btnCarregarCidades.Size = new System.Drawing.Size(89, 43);
-            this.btnCarregarCidades.TabIndex = 12;
-            this.btnCarregarCidades.Text = "Carregar cidades";
-            this.btnCarregarCidades.UseVisualStyleBackColor = true;
-            this.btnCarregarCidades.Click += new System.EventHandler(this.btnCarregarCidades_Click);
+            this.dlgAbrir.FileName = "Selecione o arquivo correspondente";
+            // 
+            // btnCarregarCaminhos
+            // 
+            this.btnCarregarCaminhos.Location = new System.Drawing.Point(920, 25);
+            this.btnCarregarCaminhos.Name = "btnCarregarCaminhos";
+            this.btnCarregarCaminhos.Size = new System.Drawing.Size(89, 35);
+            this.btnCarregarCaminhos.TabIndex = 13;
+            this.btnCarregarCaminhos.Text = "Carregar caminhos";
+            this.btnCarregarCaminhos.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -386,6 +402,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn6;
         private System.Windows.Forms.Button btnCarregarCidades;
+        private System.Windows.Forms.OpenFileDialog dlgAbrir;
+        private System.Windows.Forms.Button btnCarregarCaminhos;
     }
 }
 

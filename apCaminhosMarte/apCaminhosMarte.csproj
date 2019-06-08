@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Arvore.cs" />
+    <Compile Include="Cidades.cs" />
     <Compile Include="FilaLista.cs" />
     <Compile Include="FilaVaziaException.cs" />
     <Compile Include="Form1.cs">
