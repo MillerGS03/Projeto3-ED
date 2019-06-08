@@ -35,8 +35,27 @@ namespace apCaminhosMarte
                 StreamReader sr = new StreamReader(dlgAbrir.FileName);
                 while (!sr.EndOfStream)
                     cidade[quantosDados] = new Cidades(sr.ReadLine());  //Insere os dados do arquivo no objeto cidade
+                ordenarCidades();
                 sr.Close();
             }
+        }
+
+        private void ordenarCidades()
+        {
+            int k, j, aux;
+            k = 1;
+            while (k<20)
+            {
+                aux = cidade[k].IdCidade;
+                j = k - 1;
+                while(j>=0 && aux < cidade[j].IdCidade)  //Ordenar o vetor de cidades para poder inserir na árvore sem problemas
+                {
+                    cidade[j + 1] = cidade[j];
+                    j--;
+                }
+                cidade[j + 1] = cidade[k];
+                k++;
+            } 
         }
     }
 }
