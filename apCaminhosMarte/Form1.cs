@@ -37,6 +37,26 @@ namespace apCaminhosMarte
                     cidade[quantosDados] = new Cidades(sr.ReadLine());  //Insere os dados do arquivo no objeto cidade
                 ordenarCidades();
                 sr.Close();
+                NoArvore<Cidades> primeiroNo = null;
+                inserirVetorEmArvore(0, quantosDados - 1, ref primeiroNo);
+                arvore.Raiz = primeiroNo;
+            }
+        }
+
+        void inserirVetorEmArvore(int inicio, int fim, ref NoArvore<Cidades> noAtual)
+        {
+            if (inicio > fim)
+                noAtual = null;
+            else
+            {
+                int meio = (inicio + fim) / 2;
+                noAtual = new NoArvore<Cidades>(cidade[meio], null, null);
+                NoArvore<Cidades> esquerda = null;
+                inserirVetorEmArvore(inicio, meio - 1, ref esquerda);
+                noAtual.Esq = esquerda;
+                NoArvore<Cidades> direita = null;
+                inserirVetorEmArvore(meio + 1, fim, ref direita);
+                noAtual.Dir = direita;
             }
         }
 
