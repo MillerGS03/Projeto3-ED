@@ -63,17 +63,19 @@ namespace apCaminhosMarte
         private void ordenarCidades()
         {
             int k, j, aux;
+            Cidades[] aux2 = new Cidades[20];  //auxiliar armazenamento do valor a ser mudado de posição
             k = 1;
             while (k<20)
             {
                 aux = cidade[k].IdCidade;
+                aux2[0] = cidade[k];
                 j = k - 1;
                 while(j>=0 && aux < cidade[j].IdCidade)  //Ordenar o vetor de cidades para poder inserir na árvore sem problemas
                 {
                     cidade[j + 1] = cidade[j];
                     j--;
                 }
-                cidade[j + 1] = cidade[k];
+                cidade[j + 1] = aux2[0];
                 k++;
             } 
         }
