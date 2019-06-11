@@ -31,6 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tpRotas = new System.Windows.Forms.TabPage();
+            this.btnCarregarCaminhos = new System.Windows.Forms.Button();
             this.btnCarregarCidades = new System.Windows.Forms.Button();
             this.btnBuscar = new System.Windows.Forms.Button();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
@@ -56,12 +57,17 @@
             this.pbMapa = new System.Windows.Forms.PictureBox();
             this.tpArvore = new System.Windows.Forms.TabPage();
             this.dlgAbrir = new System.Windows.Forms.OpenFileDialog();
-            this.btnCarregarCaminhos = new System.Windows.Forms.Button();
+            this.pbArvore = new System.Windows.Forms.PictureBox();
+            this.lblCidades = new System.Windows.Forms.Label();
+            this.pnlCidades = new System.Windows.Forms.Panel();
             this.tabControl1.SuspendLayout();
             this.tpRotas.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbMapa)).BeginInit();
+            this.tpArvore.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbArvore)).BeginInit();
+            this.pnlCidades.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -98,6 +104,15 @@
             this.tpRotas.TabIndex = 0;
             this.tpRotas.Text = "Rotas entre cidades";
             this.tpRotas.UseVisualStyleBackColor = true;
+            // 
+            // btnCarregarCaminhos
+            // 
+            this.btnCarregarCaminhos.Location = new System.Drawing.Point(920, 25);
+            this.btnCarregarCaminhos.Name = "btnCarregarCaminhos";
+            this.btnCarregarCaminhos.Size = new System.Drawing.Size(89, 35);
+            this.btnCarregarCaminhos.TabIndex = 13;
+            this.btnCarregarCaminhos.Text = "Carregar caminhos";
+            this.btnCarregarCaminhos.UseVisualStyleBackColor = true;
             // 
             // btnCarregarCidades
             // 
@@ -335,6 +350,8 @@
             // 
             // tpArvore
             // 
+            this.tpArvore.Controls.Add(this.pnlCidades);
+            this.tpArvore.Controls.Add(this.lblCidades);
             this.tpArvore.Location = new System.Drawing.Point(4, 22);
             this.tpArvore.Name = "tpArvore";
             this.tpArvore.Padding = new System.Windows.Forms.Padding(3);
@@ -347,14 +364,41 @@
             // 
             this.dlgAbrir.FileName = "Selecione o arquivo correspondente";
             // 
-            // btnCarregarCaminhos
+            // pbArvore
             // 
-            this.btnCarregarCaminhos.Location = new System.Drawing.Point(920, 25);
-            this.btnCarregarCaminhos.Name = "btnCarregarCaminhos";
-            this.btnCarregarCaminhos.Size = new System.Drawing.Size(89, 35);
-            this.btnCarregarCaminhos.TabIndex = 13;
-            this.btnCarregarCaminhos.Text = "Carregar caminhos";
-            this.btnCarregarCaminhos.UseVisualStyleBackColor = true;
+            this.pbArvore.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.pbArvore.Location = new System.Drawing.Point(3, 3);
+            this.pbArvore.Name = "pbArvore";
+            this.pbArvore.Size = new System.Drawing.Size(994, 469);
+            this.pbArvore.TabIndex = 0;
+            this.pbArvore.TabStop = false;
+            this.pbArvore.Paint += new System.Windows.Forms.PaintEventHandler(this.PbArvore_Paint);
+            // 
+            // lblCidades
+            // 
+            this.lblCidades.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblCidades.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCidades.Location = new System.Drawing.Point(6, 15);
+            this.lblCidades.Name = "lblCidades";
+            this.lblCidades.Size = new System.Drawing.Size(1004, 23);
+            this.lblCidades.TabIndex = 1;
+            this.lblCidades.Text = "Cidades";
+            this.lblCidades.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // pnlCidades
+            // 
+            this.pnlCidades.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnlCidades.AutoScroll = true;
+            this.pnlCidades.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.pnlCidades.Controls.Add(this.pbArvore);
+            this.pnlCidades.Location = new System.Drawing.Point(10, 41);
+            this.pnlCidades.Name = "pnlCidades";
+            this.pnlCidades.Size = new System.Drawing.Size(1000, 475);
+            this.pnlCidades.TabIndex = 2;
+            this.pnlCidades.Resize += new System.EventHandler(this.PnlCidades_Resize);
             // 
             // Form1
             // 
@@ -363,13 +407,16 @@
             this.ClientSize = new System.Drawing.Size(1028, 554);
             this.Controls.Add(this.tabControl1);
             this.Name = "Form1";
-            this.Text = "Projeto 3 - busca de caminhos entre cidades";
+            this.Text = " ";
             this.tabControl1.ResumeLayout(false);
             this.tpRotas.ResumeLayout(false);
             this.tpRotas.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbMapa)).EndInit();
+            this.tpArvore.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pbArvore)).EndInit();
+            this.pnlCidades.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -404,6 +451,9 @@
         private System.Windows.Forms.Button btnCarregarCidades;
         private System.Windows.Forms.OpenFileDialog dlgAbrir;
         private System.Windows.Forms.Button btnCarregarCaminhos;
+        private System.Windows.Forms.Label lblCidades;
+        private System.Windows.Forms.PictureBox pbArvore;
+        private System.Windows.Forms.Panel pnlCidades;
     }
 }
 
