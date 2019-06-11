@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace apCaminhosMarte
 {
-    class Cidades : IComparable<Cidades>
+    class Cidade : IComparable<Cidade>
     {
         private int idCidade, x, y;
         private string nomeCidade;
@@ -16,19 +16,19 @@ namespace apCaminhosMarte
         public int X { get => x; set => x = value; }
         public int Y { get => y; set => y = value; }
 
-        public Cidades() { }
+        public Cidade() { }
 
-        public Cidades(string linha)
+        public Cidade(string linha)
         {
             idCidade = int.Parse(linha.Substring(0, 3));
-            nomeCidade = linha.Substring(3, 18);
-            x = int.Parse(linha.Substring(18, 23));
-            y = int.Parse(linha.Substring(23, 28));  //Especifíca a localização de cada um nas posições de leitura
+            nomeCidade = linha.Substring(3, 15).Trim();
+            x = int.Parse(linha.Substring(18, 5));
+            y = int.Parse(linha.Substring(23, 5));  //Especifíca a localização de cada um nas posições de leitura
         }
 
-        public int CompareTo(Cidades other)
+        public int CompareTo(Cidade other)
         {
-            throw new NotImplementedException();
+            return idCidade - other.idCidade;
         }
     }
 }

@@ -52,7 +52,9 @@ public class Arvore<Dado> where Dado : IComparable<Dado>
         else
         {
             var novoNo = new NoArvore<Dado>(incluido);
-            if (incluido.CompareTo(antecessor.Info) < 0)
+            if (antecessor == null)
+                Raiz = novoNo;
+            else if (incluido.CompareTo(antecessor.Info) < 0)
                 antecessor.Esq = novoNo;
             else
                 antecessor.Dir = novoNo;
