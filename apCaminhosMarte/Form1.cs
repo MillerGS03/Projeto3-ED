@@ -13,7 +13,7 @@ namespace apCaminhosMarte
 {
     public partial class Form1 : Form
     {
-        private Cidades[] cidade = new Cidades[20];   //Número de cidades no arquivo
+        private Cidades[] cidade = new Cidades[23];   //Número de cidades no arquivo
         private int quantosDados;
         private Arvore<Cidades> arvore;
 
