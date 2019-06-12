@@ -15,13 +15,16 @@ namespace apCaminhosMarte
     {
         //private Cidade[] cidade = new Cidade[23];   //Número de cidades no arquivo
         //private int quantosDados;
-        private Arvore<Cidade> arvore;
+        private Arvore<Cidade> cidades;
+        private List<Caminho> caminhos;
+        private bool[,] adjacencia;
 
         public Form1()
         {
             InitializeComponent();
 
-            arvore = new Arvore<Cidade>();
+            cidades = new Arvore<Cidade>();
+            caminhos = new List<Caminho>();
         }
 
         private void BtnBuscar_Click(object sender, EventArgs e)
@@ -35,11 +38,14 @@ namespace apCaminhosMarte
             {
                 StreamReader sr = new StreamReader(dlgAbrir.FileName, Encoding.Default);
                 while (!sr.EndOfStream)
-                    arvore.Incluir(new Cidade(sr.ReadLine()));  //Insere os dados do arquivo no objeto cidade
+                {
+                    var registro = sr.ReadLine();
+                    if (registro.TrimEnd().Length == 28)
+                        cidades.Incluir(new Cidade(registro));
+                }
                 sr.Close();
-                //NoArvore<Cidade> primeiroNo = null;
-                //InserirVetorEmArvore(0, quantosDados - 1, ref primeiroNo);
-                //arvore.Raiz = primeiroNo;
+                btnCarregarCidades.Enabled = false;
+                btnCarregarCaminhos.Enabled = true;
             }
         }
 
@@ -47,8 +53,8 @@ namespace apCaminhosMarte
         {
             var g = e.Graphics;
 
-            int profundidade = DesenharArvore(arvore.Raiz, 0, 0, -1, -1, g); // Método recursivo retorna a profundidade da árvore
-            pbArvore.MinimumSize = new Size((int)Math.Pow(2, profundidade) * tamanhoNos, (profundidade + 1) * (tamanhoNos + margemY)); 
+            int profundidade = DesenharArvore(cidades.Raiz, 0, 0, -1, -1, g); // Método recursivo retorna a profundidade da árvore
+            pbArvore.MinimumSize = new Size((int)Math.Pow(2, profundidade) * tamanhoNos, (profundidade + 1) * (tamanhoNos + margemY));
 
             if (pbArvore.MinimumSize.Width < pnlCidades.Width)
                 pbArvore.MinimumSize = new Size(pnlCidades.Width - 3, pbArvore.MinimumSize.Height); // Se o PictureBox poderia ser maior, seu tamanho é aumentado
@@ -60,6 +66,28 @@ namespace apCaminhosMarte
         private void PnlCidades_Resize(object sender, EventArgs e)
         {
             pbArvore.Refresh();
+        }
+
+        private void btnCarregarCaminhos_Click(object sender, EventArgs e)
+        {
+            if (dlgAbrir.ShowDialog() == DialogResult.OK)
+            {
+                StreamReader sr = new StreamReader(dlgAbrir.FileName, Encoding.Default);
+
+                adjacencia = new bool[cidades.QuantosDados, cidades.QuantosDados];
+                while (!sr.EndOfStream)
+                {
+                    var registro = sr.ReadLine();
+                    if (registro.TrimEnd().Length == 20)
+                    {
+                        var novoCaminho = new Caminho(registro);
+                        adjacencia[novoCaminho.IdCidadeOrigem, novoCaminho.IdCidadeDestino] = true;
+                        caminhos.Add(novoCaminho);
+                    }
+                }
+                sr.Close();
+                btnCarregarCaminhos.Enabled = false;
+            }
         }
 
         private int DesenharArvore(NoArvore<Cidade> no, int profundidade, int posicao, int xPai, int yPai, Graphics g)

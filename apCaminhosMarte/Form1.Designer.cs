@@ -56,18 +56,18 @@
             this.lsbOrigem = new System.Windows.Forms.ListBox();
             this.pbMapa = new System.Windows.Forms.PictureBox();
             this.tpArvore = new System.Windows.Forms.TabPage();
-            this.dlgAbrir = new System.Windows.Forms.OpenFileDialog();
+            this.pnlCidades = new System.Windows.Forms.Panel();
             this.pbArvore = new System.Windows.Forms.PictureBox();
             this.lblCidades = new System.Windows.Forms.Label();
-            this.pnlCidades = new System.Windows.Forms.Panel();
+            this.dlgAbrir = new System.Windows.Forms.OpenFileDialog();
             this.tabControl1.SuspendLayout();
             this.tpRotas.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbMapa)).BeginInit();
             this.tpArvore.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbArvore)).BeginInit();
             this.pnlCidades.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbArvore)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -107,16 +107,20 @@
             // 
             // btnCarregarCaminhos
             // 
-            this.btnCarregarCaminhos.Location = new System.Drawing.Point(920, 25);
+            this.btnCarregarCaminhos.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCarregarCaminhos.Enabled = false;
+            this.btnCarregarCaminhos.Location = new System.Drawing.Point(920, 74);
             this.btnCarregarCaminhos.Name = "btnCarregarCaminhos";
             this.btnCarregarCaminhos.Size = new System.Drawing.Size(89, 35);
             this.btnCarregarCaminhos.TabIndex = 13;
             this.btnCarregarCaminhos.Text = "Carregar caminhos";
             this.btnCarregarCaminhos.UseVisualStyleBackColor = true;
+            this.btnCarregarCaminhos.Click += new System.EventHandler(this.btnCarregarCaminhos_Click);
             // 
             // btnCarregarCidades
             // 
-            this.btnCarregarCidades.Location = new System.Drawing.Point(920, 66);
+            this.btnCarregarCidades.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCarregarCidades.Location = new System.Drawing.Point(920, 25);
             this.btnCarregarCidades.Name = "btnCarregarCidades";
             this.btnCarregarCidades.Size = new System.Drawing.Size(89, 43);
             this.btnCarregarCidades.TabIndex = 12;
@@ -360,9 +364,19 @@
             this.tpArvore.Text = "Árvore de Cidades";
             this.tpArvore.UseVisualStyleBackColor = true;
             // 
-            // dlgAbrir
+            // pnlCidades
             // 
-            this.dlgAbrir.FileName = "Selecione o arquivo correspondente";
+            this.pnlCidades.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnlCidades.AutoScroll = true;
+            this.pnlCidades.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.pnlCidades.Controls.Add(this.pbArvore);
+            this.pnlCidades.Location = new System.Drawing.Point(10, 41);
+            this.pnlCidades.Name = "pnlCidades";
+            this.pnlCidades.Size = new System.Drawing.Size(1000, 475);
+            this.pnlCidades.TabIndex = 2;
+            this.pnlCidades.Resize += new System.EventHandler(this.PnlCidades_Resize);
             // 
             // pbArvore
             // 
@@ -386,19 +400,9 @@
             this.lblCidades.Text = "Cidades";
             this.lblCidades.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // pnlCidades
+            // dlgAbrir
             // 
-            this.pnlCidades.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pnlCidades.AutoScroll = true;
-            this.pnlCidades.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.pnlCidades.Controls.Add(this.pbArvore);
-            this.pnlCidades.Location = new System.Drawing.Point(10, 41);
-            this.pnlCidades.Name = "pnlCidades";
-            this.pnlCidades.Size = new System.Drawing.Size(1000, 475);
-            this.pnlCidades.TabIndex = 2;
-            this.pnlCidades.Resize += new System.EventHandler(this.PnlCidades_Resize);
+            this.dlgAbrir.FileName = "Selecione o arquivo correspondente";
             // 
             // Form1
             // 
@@ -415,8 +419,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbMapa)).EndInit();
             this.tpArvore.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pbArvore)).EndInit();
             this.pnlCidades.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pbArvore)).EndInit();
             this.ResumeLayout(false);
 
         }
