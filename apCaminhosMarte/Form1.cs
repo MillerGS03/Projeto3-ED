@@ -18,7 +18,6 @@ namespace apCaminhosMarte
         private Arvore<Cidade> cidades;
         private List<Caminho> caminhos;
         private bool[,] adjacencia;
-        int[,] matrizAdjacencias;
 
         public Form1()
         {
@@ -88,11 +87,11 @@ namespace apCaminhosMarte
                 }
                 foreach(Caminho c in caminhos)
                 {
-                    if (adjacencia[c.IdCidadeOrigem, c.IdCidadeDestino] == true)
+                    if (adjacencia[c.IdCidadeOrigem, c.IdCidadeDestino])
                     {
-                        matrizAdjacencias[c.IdCidadeOrigem, c.IdCidadeDestino] = c.Distancia;  //Cria a matriz com as distâncias 
-                        matrizAdjacencias[c.IdCidadeDestino, c.IdCidadeOrigem] = c.Distancia;
-                    }                                                                      
+                        var novaRota = new Matriz(c.IdCidadeOrigem, c.IdCidadeDestino, c.Distancia);
+                        novaRota.inserirNaMatriz();
+                    }
                 }
                 sr.Close();
                 btnCarregarCaminhos.Enabled = false;
