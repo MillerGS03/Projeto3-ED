@@ -88,8 +88,11 @@ namespace apCaminhosMarte
                 }
                 foreach(Caminho c in caminhos)
                 {
-                    matrizAdjacencias[c.IdCidadeOrigem, c.IdCidadeDestino] = c.Distancia;  //Cria a matriz com as distâncias 
-                                                                                           //entre cidades
+                    if (adjacencia[c.IdCidadeOrigem, c.IdCidadeDestino] == true)
+                    {
+                        matrizAdjacencias[c.IdCidadeOrigem, c.IdCidadeDestino] = c.Distancia;  //Cria a matriz com as distâncias 
+                        matrizAdjacencias[c.IdCidadeDestino, c.IdCidadeOrigem] = c.Distancia;
+                    }                                                                      
                 }
                 sr.Close();
                 btnCarregarCaminhos.Enabled = false;
