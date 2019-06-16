@@ -62,6 +62,7 @@
     <Compile Include="IQueue.cs" />
     <Compile Include="IStack.cs" />
     <Compile Include="ListaSimples.cs" />
+    <Compile Include="Matriz.cs" />
     <Compile Include="NoArvore.cs" />
     <Compile Include="NoLista.cs" />
     <Compile Include="PilhaLista.cs" />
