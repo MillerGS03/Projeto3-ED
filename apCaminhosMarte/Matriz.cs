@@ -10,7 +10,10 @@ namespace apCaminhosMarte
     {
         int[,] matrizDeAdjacencias;
         int origem, destino, distancia;
+        int[] caminhos;
         IStack<int> caminho;
+        IStack<int> caminho2;
+        bool[,] passouCidade;
 
         public Matriz(int tamanho)
         {
@@ -25,17 +28,27 @@ namespace apCaminhosMarte
         public void acharCaminhos(int origem, int destino) //origem == idCidadeOrigem || destino == idCidadeDestino 
         {
             int coluna = 0;  //teste de disponibilidade de caminhos
-            if(origem != destino)             
-                if(matrizDeAdjacencias[origem, coluna] == 0)
+            if (origem != destino)
+                if (matrizDeAdjacencias[origem, coluna] == 0)
                     coluna++;
                 else
                 {
+                    passouCidade[origem, coluna] = true;
                     distancia += matrizDeAdjacencias[origem, coluna];  //calcula a distância entre os caminhos até achar o destino
-                    origem = coluna;
                     caminho.Empilhar(origem);
+                    origem = coluna;
                     acharCaminhos(origem, destino);
                 }
-            
+            caminho.Empilhar(destino);
+            while (!caminho.EstaVazia())
+            {
+                caminho2.Empilhar(caminho.Desempilhar());
+            }
+            while (!caminho2.EstaVazia())
+            {
+                int i = 0;
+                caminhos[i] = caminho2.Desempilhar();
+            }
         }
 
         public int[,] MatrizDeAdjacencias { get => matrizDeAdjacencias; set => matrizDeAdjacencias = value; }
