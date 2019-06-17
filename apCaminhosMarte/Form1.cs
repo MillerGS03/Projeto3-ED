@@ -17,6 +17,7 @@ namespace apCaminhosMarte
         //private int quantosDados;
         private Arvore<Cidade> cidades;
         private List<Caminho> caminhos;
+        private Matriz grafo;
         private bool[,] adjacencia;
 
         public Form1()
@@ -29,7 +30,18 @@ namespace apCaminhosMarte
 
         private void BtnBuscar_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Buscar caminhos entre cidades selecionadas");
+            if (lsbOrigem.SelectedIndex == -1 || lsbDestino.SelectedIndex == -1)
+                MessageBox.Show("Selecione as cidades de origem e destino!");
+            else
+            {
+                grafo.ProcurarCaminhos(lsbOrigem.SelectedIndex, lsbDestino.SelectedIndex);
+                for (int i = 0; i < grafo.Caminhos.Count; i++)
+                {
+                    dgvCaminhos.RowCount++;
+                    for (int j = 0; !grafo.Caminhos[i].EstaVazia(); j++)
+                        dgvCaminhos.Rows[i].Cells[j].Value = grafo.Caminhos[i].Desempilhar();
+                }
+            }
         }
 
         private void btnCarregarCidades_Click(object sender, EventArgs e)
@@ -48,9 +60,25 @@ namespace apCaminhosMarte
                 btnCarregarCaminhos.Enabled = true;
 
                 fonteCidades = lblCidades.Font;
+
+                lsbDestino.Items.Clear();
+                lsbOrigem.Items.Clear();
+
+                ColocarNaListbox(cidades.Raiz);
             }
         }
+        private void ColocarNaListbox(NoArvore<Cidade> no)
+        {
+            if (no == null)
+                return;
+            ColocarNaListbox(no.Esq);
 
+            string item = no.Info.IdCidade + " - " + no.Info.NomeCidade;
+            lsbOrigem.Items.Add(item);
+            lsbDestino.Items.Add(item);
+
+            ColocarNaListbox(no.Dir);
+        }
         private void PbArvore_Paint(object sender, PaintEventArgs e)
         {
             var g = e.Graphics;
@@ -87,17 +115,19 @@ namespace apCaminhosMarte
                         caminhos.Add(novoCaminho);
                     }
                 }
-                var novaRota = new Matriz(caminhos.Count);
+                grafo = new Matriz(caminhos.Count, cidades);
 
                 foreach (Caminho c in caminhos)
                 {
                     if (adjacencia[c.IdCidadeOrigem, c.IdCidadeDestino])
-                    {                    
-                        novaRota.inserirNaMatriz(c.IdCidadeOrigem, c.IdCidadeDestino, c.Distancia);
+                    {
+                        grafo.inserirNaMatriz(c.IdCidadeOrigem, c.IdCidadeDestino, c.Distancia);
                     }
                 }
                 sr.Close();
+
                 btnCarregarCaminhos.Enabled = false;
+                btnBuscar.Enabled = true;
             }
         }
 
@@ -128,6 +158,11 @@ namespace apCaminhosMarte
             g.DrawString(no.Info.NomeCidade, fonteCidades, brush, x - tamanhoString / 2, y - 25);
         }
 
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            fonteCidades = new Font(fonteCidades.FontFamily, (float)Width / 130, FontStyle.Bold);
+        }
+
         private int DesenharArvore(NoArvore<Cidade> no, int profundidade, int posicao, int xPai, int yPai, Graphics g)
         {
             if (no == null)
@@ -147,12 +182,12 @@ namespace apCaminhosMarte
                 g.DrawLine(pen, x + tamanhoNos / 2, y, xPai + tamanhoNos / 2, yPai + tamanhoNos);
 
             // Nome da cidade
-            g.DrawString(no.Info.NomeCidade, fonteCidades, brush, x + (tamanhoNos - g.MeasureString(no.Info.NomeCidade, fonteCidades).Width) / 2, y - 22);
+            g.DrawString(no.Info.NomeCidade, lblCidades.Font, brush, x + (tamanhoNos - g.MeasureString(no.Info.NomeCidade, lblCidades.Font).Width) / 2, y - 22);
 
             // Id da cidade
             brush.Color = Color.Black;
-            SizeF tamanhoId = g.MeasureString(no.Info.IdCidade.ToString(), fonteCidades);
-            g.DrawString(no.Info.IdCidade.ToString(), fonteCidades, brush, x + (tamanhoNos - tamanhoId.Width) / 2, y + (tamanhoNos - tamanhoId.Height) / 2);
+            SizeF tamanhoId = g.MeasureString(no.Info.IdCidade.ToString(), lblCidades.Font);
+            g.DrawString(no.Info.IdCidade.ToString(), lblCidades.Font, brush, x + (tamanhoNos - tamanhoId.Width) / 2, y + (tamanhoNos - tamanhoId.Height) / 2);
 
             // Filhos
             int profMaximaEsq = DesenharArvore(no.Esq, profundidade + 1, posicao * 2, x, y, g);
