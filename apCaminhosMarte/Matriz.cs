@@ -21,7 +21,6 @@ namespace apCaminhosMarte
         public void inserirNaMatriz()
         {
             MatrizDeAdjacencias[origem, destino] = distancia;
-            MatrizDeAdjacencias[destino, origem] = distancia;  //Para se ter o caminho inverso 
         }
 
         public int[,] MatrizDeAdjacencias { get => matrizDeAdjacencias; set => matrizDeAdjacencias = value; }
