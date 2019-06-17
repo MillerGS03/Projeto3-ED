@@ -46,6 +46,8 @@ namespace apCaminhosMarte
                 sr.Close();
                 btnCarregarCidades.Enabled = false;
                 btnCarregarCaminhos.Enabled = true;
+
+                fonteCidades = lblCidades.Font;
             }
         }
 
@@ -99,6 +101,33 @@ namespace apCaminhosMarte
             }
         }
 
+        private void pbMapa_Paint(object sender, PaintEventArgs e)
+        {
+            if (cidades.QuantosDados > 0)
+                DesenharCidades(cidades.Raiz, e.Graphics);
+        }
+        Font fonteCidades;
+        private void DesenharCidades(NoArvore<Cidade> no, Graphics g)
+        {
+            if (no == null)
+                return;
+
+            DesenharCidades(no.Esq, g);
+            DesenharCidades(no.Dir, g);
+
+            double proporcaoX = (double)pbMapa.Width / 4096;
+            double proporcaoY = (double)pbMapa.Height / 2048;
+
+            int x = Convert.ToInt32(no.Info.X * proporcaoX);
+            int y = Convert.ToInt32(no.Info.Y * proporcaoY);
+
+            brush.Color = Color.Black;
+            g.FillEllipse(brush, x - 3, y - 3, 6, 6);
+
+            int tamanhoString = Convert.ToInt32(g.MeasureString(no.Info.NomeCidade, fonteCidades).Width);
+            g.DrawString(no.Info.NomeCidade, fonteCidades, brush, x - tamanhoString / 2, y - 25);
+        }
+
         private int DesenharArvore(NoArvore<Cidade> no, int profundidade, int posicao, int xPai, int yPai, Graphics g)
         {
             if (no == null)
@@ -118,12 +147,12 @@ namespace apCaminhosMarte
                 g.DrawLine(pen, x + tamanhoNos / 2, y, xPai + tamanhoNos / 2, yPai + tamanhoNos);
 
             // Nome da cidade
-            g.DrawString(no.Info.NomeCidade, lblCidades.Font, brush, x + (tamanhoNos - g.MeasureString(no.Info.NomeCidade, lblCidades.Font).Width) / 2, y - 22);
+            g.DrawString(no.Info.NomeCidade, fonteCidades, brush, x + (tamanhoNos - g.MeasureString(no.Info.NomeCidade, fonteCidades).Width) / 2, y - 22);
 
             // Id da cidade
             brush.Color = Color.Black;
-            SizeF tamanhoId = g.MeasureString(no.Info.IdCidade.ToString(), lblCidades.Font);
-            g.DrawString(no.Info.IdCidade.ToString(), lblCidades.Font, brush, x + (tamanhoNos - tamanhoId.Width) / 2, y + (tamanhoNos - tamanhoId.Height) / 2);
+            SizeF tamanhoId = g.MeasureString(no.Info.IdCidade.ToString(), fonteCidades);
+            g.DrawString(no.Info.IdCidade.ToString(), fonteCidades, brush, x + (tamanhoNos - tamanhoId.Width) / 2, y + (tamanhoNos - tamanhoId.Height) / 2);
 
             // Filhos
             int profMaximaEsq = DesenharArvore(no.Esq, profundidade + 1, posicao * 2, x, y, g);
