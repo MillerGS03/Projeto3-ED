@@ -23,6 +23,21 @@ namespace apCaminhosMarte
             MatrizDeAdjacencias[origem, destino] = distancia;
         }
 
+        public void acharCaminho(int origem, int destino) 
+        {
+            int coluna = 0;
+            if(origem != destino)             
+                if(matrizDeAdjacencias[origem, coluna] == 0)
+                    coluna++;
+                else
+                {
+                    origem = coluna;
+                    //guardar o caminho na pilha
+                    acharCaminho(origem, destino);
+                }
+            
+        }
+
         public int[,] MatrizDeAdjacencias { get => matrizDeAdjacencias; set => matrizDeAdjacencias = value; }
         public int Origem { get => origem; set => origem = value; }
         public int Destino { get => destino; set => destino = value; }
