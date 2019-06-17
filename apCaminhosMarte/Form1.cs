@@ -85,12 +85,13 @@ namespace apCaminhosMarte
                         caminhos.Add(novoCaminho);
                     }
                 }
-                foreach(Caminho c in caminhos)
+                var novaRota = new Matriz(caminhos.Count);
+
+                foreach (Caminho c in caminhos)
                 {
                     if (adjacencia[c.IdCidadeOrigem, c.IdCidadeDestino])
-                    {
-                        var novaRota = new Matriz(c.IdCidadeOrigem, c.IdCidadeDestino, c.Distancia);
-                        novaRota.inserirNaMatriz();
+                    {                    
+                        novaRota.inserirNaMatriz(c.IdCidadeOrigem, c.IdCidadeDestino, c.Distancia);
                     }
                 }
                 sr.Close();

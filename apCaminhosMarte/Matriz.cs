@@ -12,14 +12,12 @@ namespace apCaminhosMarte
         int origem, destino, distancia;
         IStack<int> caminho;
 
-        public Matriz(int origem, int destino, int distancia)
+        public Matriz(int tamanho)
         {
-            Origem = origem;
-            Destino = destino;
-            Distancia = distancia;
+            matrizDeAdjacencias = new int[tamanho, tamanho];
         }
 
-        public void inserirNaMatriz()
+        public void inserirNaMatriz(int origem, int destino, int distancia)
         {
             MatrizDeAdjacencias[origem, destino] = distancia;
         }
