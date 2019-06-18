@@ -18,7 +18,6 @@ namespace apCaminhosMarte
         private Arvore<Cidade> cidades;
         private List<Caminho> caminhos;
         private Matriz grafo;
-        private bool[,] adjacencia;
 
         public Form1()
         {
@@ -26,6 +25,8 @@ namespace apCaminhosMarte
 
             cidades = new Arvore<Cidade>();
             caminhos = new List<Caminho>();
+            pontosAUnir = new List<Point>();
+            fonteCidades = lblCidades.Font;
         }
 
         private void BtnBuscar_Click(object sender, EventArgs e)
@@ -35,12 +36,24 @@ namespace apCaminhosMarte
             else
             {
                 grafo.ProcurarCaminhos(lsbOrigem.SelectedIndex, lsbDestino.SelectedIndex);
+
+                dgvCaminhos.RowCount = grafo.Caminhos.Count;
+                dgvMelhorCaminho.RowCount = (dgvCaminhos.RowCount > 0 ? 1 : 0);
+                pontosAUnir = new List<Point>();
+
                 for (int i = 0; i < grafo.Caminhos.Count; i++)
-                {
-                    dgvCaminhos.RowCount++;
                     for (int j = 0; !grafo.Caminhos[i].EstaVazia(); j++)
-                        dgvCaminhos.Rows[i].Cells[j].Value = grafo.Caminhos[i].Desempilhar();
-                }
+                    {
+                        if (grafo.Caminhos[i] == grafo.MelhorCaminho)
+                        {
+                            var cidade = grafo.Caminhos[i].OTopo();
+
+                            dgvMelhorCaminho.Rows[0].Cells[j].Value = cidade.NomeCidade;
+                            pontosAUnir.Add(new Point(cidade.X, cidade.Y));
+                        }
+
+                        dgvCaminhos.Rows[i].Cells[j].Value = grafo.Caminhos[i].Desempilhar().NomeCidade;
+                    }
             }
         }
 
@@ -59,25 +72,23 @@ namespace apCaminhosMarte
                 btnCarregarCidades.Enabled = false;
                 btnCarregarCaminhos.Enabled = true;
 
-                fonteCidades = lblCidades.Font;
-
                 lsbDestino.Items.Clear();
                 lsbOrigem.Items.Clear();
 
-                ColocarNaListbox(cidades.Raiz);
+                ColocarNasListboxes(cidades.Raiz);
             }
         }
-        private void ColocarNaListbox(NoArvore<Cidade> no)
+        private void ColocarNasListboxes(NoArvore<Cidade> no)
         {
             if (no == null)
                 return;
-            ColocarNaListbox(no.Esq);
+            ColocarNasListboxes(no.Esq);
 
             string item = no.Info.IdCidade + " - " + no.Info.NomeCidade;
             lsbOrigem.Items.Add(item);
             lsbDestino.Items.Add(item);
 
-            ColocarNaListbox(no.Dir);
+            ColocarNasListboxes(no.Dir);
         }
         private void PbArvore_Paint(object sender, PaintEventArgs e)
         {
@@ -103,28 +114,15 @@ namespace apCaminhosMarte
             if (dlgAbrir.ShowDialog() == DialogResult.OK)
             {
                 StreamReader sr = new StreamReader(dlgAbrir.FileName, Encoding.Default);
-
-                adjacencia = new bool[cidades.QuantosDados, cidades.QuantosDados];
                 while (!sr.EndOfStream)
                 {
                     var registro = sr.ReadLine();
                     if (registro.TrimEnd().Length == 20)
-                    {
-                        var novoCaminho = new Caminho(registro);
-                        adjacencia[novoCaminho.IdCidadeOrigem, novoCaminho.IdCidadeDestino] = true;
-                        caminhos.Add(novoCaminho);
-                    }
-                }
-                grafo = new Matriz(caminhos.Count, cidades);
-
-                foreach (Caminho c in caminhos)
-                {
-                    if (adjacencia[c.IdCidadeOrigem, c.IdCidadeDestino])
-                    {
-                        grafo.inserirNaMatriz(c.IdCidadeOrigem, c.IdCidadeDestino, c.Distancia);
-                    }
+                        caminhos.Add(new Caminho(registro));
                 }
                 sr.Close();
+
+                grafo = new Matriz(cidades, caminhos);
 
                 btnCarregarCaminhos.Enabled = false;
                 btnBuscar.Enabled = true;
@@ -136,7 +134,9 @@ namespace apCaminhosMarte
             if (cidades.QuantosDados > 0)
                 DesenharCidades(cidades.Raiz, e.Graphics);
         }
+
         Font fonteCidades;
+        List<Point> pontosAUnir;
         private void DesenharCidades(NoArvore<Cidade> no, Graphics g)
         {
             if (no == null)
@@ -145,8 +145,8 @@ namespace apCaminhosMarte
             DesenharCidades(no.Esq, g);
             DesenharCidades(no.Dir, g);
 
-            double proporcaoX = (double)pbMapa.Width / 4096;
-            double proporcaoY = (double)pbMapa.Height / 2048;
+            float proporcaoX = (float)pbMapa.Width / 4096;
+            float proporcaoY = (float)pbMapa.Height / 2048;
 
             int x = Convert.ToInt32(no.Info.X * proporcaoX);
             int y = Convert.ToInt32(no.Info.Y * proporcaoY);
@@ -156,6 +156,10 @@ namespace apCaminhosMarte
 
             int tamanhoString = Convert.ToInt32(g.MeasureString(no.Info.NomeCidade, fonteCidades).Width);
             g.DrawString(no.Info.NomeCidade, fonteCidades, brush, x - tamanhoString / 2, y - 25);
+
+            for (int i = 0; i < pontosAUnir.Count - 1; i++)
+                g.DrawLine(pen, pontosAUnir[i].X * proporcaoX, pontosAUnir[i].Y * proporcaoY,
+                           pontosAUnir[i + 1].X * proporcaoX, pontosAUnir[i + 1].Y * proporcaoY);
         }
 
         private void Form1_Resize(object sender, EventArgs e)
@@ -197,22 +201,5 @@ namespace apCaminhosMarte
                 return profMaximaEsq;
             return profMaximaDir;
         }
-        /*
-void InserirVetorEmArvore(int inicio, int fim, ref NoArvore<Cidade> noAtual)
-{
-   if (inicio > fim)
-       noAtual = null;
-   else
-   {
-       int meio = (inicio + fim) / 2;
-       noAtual = new NoArvore<Cidade>(cidade[meio], null, null);
-       NoArvore<Cidade> esquerda = null;
-       InserirVetorEmArvore(inicio, meio - 1, ref esquerda);
-       noAtual.Esq = esquerda;
-       NoArvore<Cidade> direita = null;
-       InserirVetorEmArvore(meio + 1, fim, ref direita);
-       noAtual.Dir = direita;
-   }
-}*/
     }
 }

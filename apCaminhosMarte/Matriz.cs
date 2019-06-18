@@ -11,23 +11,21 @@ namespace apCaminhosMarte
         int[,] matrizDeAdjacencias;
         int origem, destino, distancia;
         List<Cidade> cidades;
-        IStack<int> caminho;
+        IStack<Cidade> caminho;
 
-        List<IStack<int>> caminhos;
+        List<IStack<Cidade>> caminhos;
         List<int> distancias;
 
 
-        public Matriz(int tamanho, Arvore<Cidade> cidades)
+        public Matriz(Arvore<Cidade> cidades, List<Caminho> caminhosPossiveis)
         {
-            matrizDeAdjacencias = new int[tamanho, tamanho];
+            matrizDeAdjacencias = new int[cidades.QuantosDados, cidades.QuantosDados];
 
             this.cidades = new List<Cidade>();
 
-            caminhos = new List<IStack<int>>();
-            caminho = new PilhaLista<int>();
-            distancias = new List<int>();
-
             InserirCidade(cidades.Raiz);
+            foreach (Caminho c in caminhosPossiveis)
+                matrizDeAdjacencias[c.IdCidadeOrigem, c.IdCidadeDestino] = c.Distancia;
         }
         private void InserirCidade(NoArvore<Cidade> no)
         {
@@ -35,23 +33,26 @@ namespace apCaminhosMarte
                 return;
 
             InserirCidade(no.Esq);
-
             cidades.Add(no.Info);
-
             InserirCidade(no.Dir);
-        }
-
-        public void inserirNaMatriz(int origem, int destino, int distancia)
-        {
-            MatrizDeAdjacencias[origem, destino] = distancia;
         }
         public void ProcurarCaminhos(int origem, int destino)
         {
+            Preparar();
             AcharCaminhos(origem, destino, 0);
+        }
+        private void Preparar()
+        {
+            foreach (Cidade c in cidades)
+                c.FoiVisitado = false;
+            caminhos = new List<IStack<Cidade>>();
+            caminho = new PilhaLista<Cidade>();
+            distancias = new List<int>();
         }
         private void AcharCaminhos(int origem, int destino, int distanciaAcumulada) //origem == idCidadeOrigem || destino == idCidadeDestino 
         {
-            cidades.Find(c => c.IdCidade == origem).FoiVisitado = true;
+            var cidadeOrigem = cidades.Find(c => c.IdCidade == origem);
+            cidadeOrigem.FoiVisitado = true;
 
             if (origem != destino)
             {
@@ -60,8 +61,8 @@ namespace apCaminhosMarte
                     if (!(matrizDeAdjacencias[origem, coluna] == 0 || cidades.Find(c => c.IdCidade == coluna).FoiVisitado))
                     {
                         //distancias[caminhos.Count] += matrizDeAdjacencias[origem, coluna];  //calcula a distância entre os caminhos até achar o destino
-                        if (caminho.EstaVazia() || caminho.OTopo() != origem)
-                            caminho.Empilhar(origem);
+                        if (caminho.EstaVazia() || caminho.OTopo().IdCidade != origem)
+                            caminho.Empilhar(cidadeOrigem);
                         AcharCaminhos(coluna, destino, distanciaAcumulada + matrizDeAdjacencias[origem, coluna]);
                         caminho.Desempilhar();
                     }
@@ -69,10 +70,10 @@ namespace apCaminhosMarte
             }
             else
             {
-                caminho.Empilhar(destino);
+                caminho.Empilhar(cidades.Find(c => c.IdCidade == destino));
 
-                var caminho2 = new PilhaLista<int>();
-                var aux = new PilhaLista<int>();
+                var caminho2 = new PilhaLista<Cidade>();
+                var aux = new PilhaLista<Cidade>();
 
                 while (!caminho.EstaVazia())
                 {
@@ -81,7 +82,7 @@ namespace apCaminhosMarte
                 }
                 caminhos.Add(caminho2);
 
-                caminho = new PilhaLista<int>();
+                caminho = new PilhaLista<Cidade>();
                 while (!aux.EstaVazia())
                     caminho.Empilhar(aux.Desempilhar());
 
@@ -93,6 +94,23 @@ namespace apCaminhosMarte
         public int Origem { get => origem; set => origem = value; }
         public int Destino { get => destino; set => destino = value; }
         public int Distancia { get => distancia; set => distancia = value; }
-        public List<IStack<int>> Caminhos { get => caminhos; set => caminhos = value; }
+        public List<IStack<Cidade>> Caminhos { get => caminhos; set => caminhos = value; }
+        public IStack<Cidade> MelhorCaminho
+        {
+            get
+            {
+                int menorDistancia = int.MaxValue, 
+                    indiceMenorDistancia = -1;
+
+                for (int i = 0; i < distancias.Count; i++)
+                    if (distancias[i] < menorDistancia)
+                    {
+                        menorDistancia = distancias[i];
+                        indiceMenorDistancia = i;
+                    }
+
+                return caminhos[indiceMenorDistancia];
+            }
+        }
     }
 }
