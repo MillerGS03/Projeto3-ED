@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Diego Henrique Raul Silva - 17169
+// Gustavo Miller Santos     - 18179
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

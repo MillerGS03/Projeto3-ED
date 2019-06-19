@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Diego Henrique Raul Silva - 17169
+// Gustavo Miller Santos     - 18179
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,7 +19,7 @@ namespace apCaminhosMarte
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(new FrmRotasMarte());
         }
     }
 }

@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Diego Henrique Raul Silva - 17169
+// Gustavo Miller Santos     - 18179
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -11,15 +14,13 @@ using System.IO;
 
 namespace apCaminhosMarte
 {
-    public partial class Form1 : Form
+    public partial class FrmRotasMarte : Form
     {
-        //private Cidade[] cidade = new Cidade[23];   //Número de cidades no arquivo
-        //private int quantosDados;
         private Arvore<Cidade> cidades;
         private List<Caminho> caminhos;
         private Matriz grafo;
 
-        public Form1()
+        public FrmRotasMarte()
         {
             InitializeComponent();
 
@@ -49,23 +50,23 @@ namespace apCaminhosMarte
 
                     for (int j = 0; !grafo.Caminhos[i].EstaVazia(); j++)
                     {
-                        if (grafo.Caminhos[i] == melhorCaminho)
+                        if (grafo.Caminhos[i] == melhorCaminho) // Coloca os nomes das cidades no DataGridView de melhor caminho
                         {
                             var cidade = grafo.Caminhos[i].OTopo();
 
-                            if (dgvMelhorCaminho.ColumnCount < j + 1)
+                            if (dgvMelhorCaminho.ColumnCount < j + 1) // Aumenta a quantidade de colunas no DataGridView de melhor caminho se necessário
                                 dgvMelhorCaminho.ColumnCount = j + 1;
 
                             dgvMelhorCaminho.Rows[0].Cells[j].Value = cidade.NomeCidade;
                         }
 
-                        if (dgvCaminhos.ColumnCount < j + 1)
+                        if (dgvCaminhos.ColumnCount < j + 1) // Aumenta a quantidade de colunas no DataGridView de caminhos se necessário
                             dgvCaminhos.ColumnCount = j + 1;
 
                         dgvCaminhos.Rows[i].Cells[j].Value = grafo.Caminhos[i].OTopo().NomeCidade;
                         aux.Empilhar(grafo.Caminhos[i].Desempilhar());
                     }
-                    while (!aux.EstaVazia())
+                    while (!aux.EstaVazia()) // Restaura a pilha do caminho, para que possa ser reutilizada
                         grafo.Caminhos[i].Empilhar(aux.Desempilhar());
                 }
 
@@ -194,7 +195,7 @@ namespace apCaminhosMarte
         {
             pontosAUnir.Clear();
 
-            if (dgvCaminhos.SelectedRows.Count != 0)
+            if (dgvCaminhos.SelectedRows.Count != 0 && dgvCaminhos.SelectedRows[0].Index <= grafo.Caminhos.Count)
             {
                 var caminho = grafo.Caminhos[dgvCaminhos.SelectedRows[0].Index];
 
@@ -229,11 +230,11 @@ namespace apCaminhosMarte
                 while (!caminho.EstaVazia())
                 {
                     var cidade = caminho.OTopo();
-                    pontosAUnir.Add(new Point(cidade.X, cidade.Y));
+                    pontosAUnir.Add(new Point(cidade.X, cidade.Y)); 
                     aux.Empilhar(caminho.Desempilhar());
                 }
 
-                while (!aux.EstaVazia())
+                while (!aux.EstaVazia()) // Restaura a pilha para que possa ser reutilizada
                     caminho.Empilhar(aux.Desempilhar());
             }
             pbMapa.Invalidate();

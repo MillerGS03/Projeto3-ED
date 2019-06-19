@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Diego Henrique Raul Silva - 17169
+// Gustavo Miller Santos     - 18179
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -43,6 +46,8 @@ namespace apCaminhosMarte
         }
         private void Preparar()
         {
+            //Inicializa as variáveis
+
             foreach (Cidade c in cidades)
                 c.FoiVisitado = false;
             caminhos = new List<IStack<Cidade>>();
@@ -53,19 +58,18 @@ namespace apCaminhosMarte
         {
             var cidadeOrigem = cidades.Find(c => c.IdCidade == origem);
 
-            if (origem != destino)
+            if (origem != destino) // Indica que ainda não chegou no destino
             {
                 cidadeOrigem.FoiVisitado = true;
 
                 for (int coluna = 0; coluna < cidades.Count; coluna++)
                 {
-                    if (!(matrizDeAdjacencias[origem, coluna] == 0 || cidades.Find(c => c.IdCidade == coluna).FoiVisitado))
+                    if (!(matrizDeAdjacencias[origem, coluna] == 0 || cidades.Find(c => c.IdCidade == coluna).FoiVisitado)) // Se há caminho entre as cidades e a segunda ainda não foi visitada
                     {
-                        //distancias[caminhos.Count] += matrizDeAdjacencias[origem, coluna];  //calcula a distância entre os caminhos até achar o destino
                         if (caminho.EstaVazia() || caminho.OTopo().IdCidade != origem)
                             caminho.Empilhar(cidadeOrigem);
                         AcharCaminhos(coluna, destino, distanciaAcumulada + matrizDeAdjacencias[origem, coluna]);
-                        caminho.Desempilhar();
+                        caminho.Desempilhar(); // Desempilha para permitir que outros caminhos sejam encontrados
                     }
                 }
             }
@@ -76,20 +80,21 @@ namespace apCaminhosMarte
                 var caminho2 = new PilhaLista<Cidade>();
                 var aux = new PilhaLista<Cidade>();
 
-                while (!caminho.EstaVazia())
+                while (!caminho.EstaVazia()) // Desempilha o caminho para inverter a pilha
                 {
                     caminho2.Empilhar(caminho.OTopo());
                     aux.Empilhar(caminho.Desempilhar());
                 }
-                caminhos.Add(caminho2);
+                caminhos.Add(caminho2); // Armazena o caminho encontrado
 
                 caminho = new PilhaLista<Cidade>();
-                while (!aux.EstaVazia())
+
+                while (!aux.EstaVazia()) // Retorna as informações que foram colocadas numa pilha auxiliar à variavel "caminho"
                     caminho.Empilhar(aux.Desempilhar());
 
-                distancias.Add(distanciaAcumulada);
+                distancias.Add(distanciaAcumulada); // Armazena a distância percorrida no caminho encontrado
 
-                foreach (Cidade c in cidades)
+                foreach (Cidade c in cidades) // Desmarca as cidades para permitir que outros caminhos com trechos parecidos sejam encontrados
                     c.FoiVisitado = false;
             }
         }

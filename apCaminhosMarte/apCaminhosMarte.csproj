@@ -52,11 +52,11 @@
     <Compile Include="Cidade.cs" />
     <Compile Include="FilaLista.cs" />
     <Compile Include="FilaVaziaException.cs" />
-    <Compile Include="Form1.cs">
+    <Compile Include="FrmRotasMarte.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="FrmRotasMarte.Designer.cs">
+      <DependentUpon>FrmRotasMarte.cs</DependentUpon>
     </Compile>
     <Compile Include="IGravarEmArquivo.cs" />
     <Compile Include="IQueue.cs" />
@@ -69,8 +69,8 @@
     <Compile Include="PilhaVaziaException.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="FrmRotasMarte.resx">
+      <DependentUpon>FrmRotasMarte.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
