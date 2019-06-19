@@ -37,23 +37,43 @@ namespace apCaminhosMarte
             {
                 grafo.ProcurarCaminhos(lsbOrigem.SelectedIndex, lsbDestino.SelectedIndex);
 
+                if (grafo.Caminhos.Count == 0)
+                    MessageBox.Show("Não há caminhos!");
+
                 dgvCaminhos.RowCount = grafo.Caminhos.Count;
                 dgvMelhorCaminho.RowCount = (dgvCaminhos.RowCount > 0 ? 1 : 0);
+                var melhorCaminho = grafo.MelhorCaminho;
+
                 pontosAUnir = new List<Point>();
 
                 for (int i = 0; i < grafo.Caminhos.Count; i++)
+                {
+                    PilhaLista<Cidade> aux = new PilhaLista<Cidade>();
+
                     for (int j = 0; !grafo.Caminhos[i].EstaVazia(); j++)
                     {
-                        if (grafo.Caminhos[i] == grafo.MelhorCaminho)
+                        if (grafo.Caminhos[i] == melhorCaminho)
                         {
                             var cidade = grafo.Caminhos[i].OTopo();
 
+                            if (dgvMelhorCaminho.ColumnCount < j + 1)
+                                dgvMelhorCaminho.ColumnCount = j + 1;
+
                             dgvMelhorCaminho.Rows[0].Cells[j].Value = cidade.NomeCidade;
-                            pontosAUnir.Add(new Point(cidade.X, cidade.Y));
                         }
 
-                        dgvCaminhos.Rows[i].Cells[j].Value = grafo.Caminhos[i].Desempilhar().NomeCidade;
+                        if (dgvCaminhos.ColumnCount < j + 1)
+                            dgvCaminhos.ColumnCount = j + 1;
+
+                        dgvCaminhos.Rows[i].Cells[j].Value = grafo.Caminhos[i].OTopo().NomeCidade;
+                        aux.Empilhar(grafo.Caminhos[i].Desempilhar());
                     }
+                    while (!aux.EstaVazia())
+                        grafo.Caminhos[i].Empilhar(aux.Desempilhar());
+                }
+
+                AtualizarPontosAUnir();
+                pbArvore.Invalidate();
             }
         }
 
@@ -76,6 +96,9 @@ namespace apCaminhosMarte
                 lsbOrigem.Items.Clear();
 
                 ColocarNasListboxes(cidades.Raiz);
+                fonteCidades = new Font(fonteCidades.FontFamily, (float)Width / 130, FontStyle.Bold);
+
+                pbMapa.Invalidate();
             }
         }
         private void ColocarNasListboxes(NoArvore<Cidade> no)
@@ -165,6 +188,53 @@ namespace apCaminhosMarte
         private void Form1_Resize(object sender, EventArgs e)
         {
             fonteCidades = new Font(fonteCidades.FontFamily, (float)Width / 130, FontStyle.Bold);
+        }
+
+        private void AtualizarPontosAUnir()
+        {
+            pontosAUnir.Clear();
+
+            if (dgvCaminhos.SelectedRows.Count != 0)
+            {
+                var caminho = grafo.Caminhos[dgvCaminhos.SelectedRows[0].Index];
+
+                var aux = new PilhaLista<Cidade>();
+                while (!caminho.EstaVazia())
+                {
+                    var cidade = caminho.OTopo();
+                    pontosAUnir.Add(new Point(cidade.X, cidade.Y));
+                    aux.Empilhar(caminho.Desempilhar());
+                }
+
+                while (!aux.EstaVazia())
+                    caminho.Empilhar(aux.Desempilhar());
+            }
+
+            pbMapa.Invalidate();
+        }
+        private void dgvCaminhos_SelectionChanged(object sender, EventArgs e)
+        {
+            AtualizarPontosAUnir();
+        }
+
+        private void dgvMelhorCaminho_SelectionChanged(object sender, EventArgs e)
+        {
+            pontosAUnir.Clear();
+
+            var caminho = grafo.MelhorCaminho;
+
+            var aux = new PilhaLista<Cidade>();
+            while (!caminho.EstaVazia())
+            {
+                var cidade = caminho.OTopo();
+                pontosAUnir.Add(new Point(cidade.X, cidade.Y));
+                aux.Empilhar(caminho.Desempilhar());
+            }
+
+            while (!aux.EstaVazia())
+                caminho.Empilhar(aux.Desempilhar());
+
+            pbMapa.Invalidate();
         }
 
         private int DesenharArvore(NoArvore<Cidade> no, int profundidade, int posicao, int xPai, int yPai, Graphics g)

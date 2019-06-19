@@ -52,10 +52,11 @@ namespace apCaminhosMarte
         private void AcharCaminhos(int origem, int destino, int distanciaAcumulada) //origem == idCidadeOrigem || destino == idCidadeDestino 
         {
             var cidadeOrigem = cidades.Find(c => c.IdCidade == origem);
-            cidadeOrigem.FoiVisitado = true;
 
             if (origem != destino)
             {
+                cidadeOrigem.FoiVisitado = true;
+
                 for (int coluna = 0; coluna < cidades.Count; coluna++)
                 {
                     if (!(matrizDeAdjacencias[origem, coluna] == 0 || cidades.Find(c => c.IdCidade == coluna).FoiVisitado))
@@ -87,6 +88,9 @@ namespace apCaminhosMarte
                     caminho.Empilhar(aux.Desempilhar());
 
                 distancias.Add(distanciaAcumulada);
+
+                foreach (Cidade c in cidades)
+                    c.FoiVisitado = false;
             }
         }
 
@@ -99,6 +103,8 @@ namespace apCaminhosMarte
         {
             get
             {
+                if (caminhos.Count == 0)
+                    return null;
                 int menorDistancia = int.MaxValue, 
                     indiceMenorDistancia = -1;
 
