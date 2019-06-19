@@ -37,9 +37,6 @@ namespace apCaminhosMarte
             {
                 grafo.ProcurarCaminhos(lsbOrigem.SelectedIndex, lsbDestino.SelectedIndex);
 
-                if (grafo.Caminhos.Count == 0)
-                    MessageBox.Show("Não há caminhos!");
-
                 dgvCaminhos.RowCount = grafo.Caminhos.Count;
                 dgvMelhorCaminho.RowCount = (dgvCaminhos.RowCount > 0 ? 1 : 0);
                 var melhorCaminho = grafo.MelhorCaminho;
@@ -74,6 +71,9 @@ namespace apCaminhosMarte
 
                 AtualizarPontosAUnir();
                 pbArvore.Invalidate();
+
+                if (grafo.Caminhos.Count == 0)
+                    MessageBox.Show("Não há caminhos!");
             }
         }
 
@@ -223,17 +223,19 @@ namespace apCaminhosMarte
 
             var caminho = grafo.MelhorCaminho;
 
-            var aux = new PilhaLista<Cidade>();
-            while (!caminho.EstaVazia())
+            if (caminho != null)
             {
-                var cidade = caminho.OTopo();
-                pontosAUnir.Add(new Point(cidade.X, cidade.Y));
-                aux.Empilhar(caminho.Desempilhar());
+                var aux = new PilhaLista<Cidade>();
+                while (!caminho.EstaVazia())
+                {
+                    var cidade = caminho.OTopo();
+                    pontosAUnir.Add(new Point(cidade.X, cidade.Y));
+                    aux.Empilhar(caminho.Desempilhar());
+                }
+
+                while (!aux.EstaVazia())
+                    caminho.Empilhar(aux.Desempilhar());
             }
-
-            while (!aux.EstaVazia())
-                caminho.Empilhar(aux.Desempilhar());
-
             pbMapa.Invalidate();
         }
 
